@@ -128,6 +128,9 @@ include_directories(
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/slz_recognition.cpp
 # )
+add_library(recognizer
+  src/recognizer.cpp
+)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -137,8 +140,12 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
+
+find_package(OpenCV)
+include_directories(${OpenCV_INCLUDE_DIRS})
+
 add_executable(slz_recognition src/slz_recognition.cpp)
-target_link_libraries(slz_recognition ${catkin_LIBRARIES})
+target_link_libraries(slz_recognition ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} recognizer)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
