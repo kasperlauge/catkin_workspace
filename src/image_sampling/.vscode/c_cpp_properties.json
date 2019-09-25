@@ -1,0 +1,21 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/home/lars/catkin_ws/src/mavros/mavros_msgs/include/**",
+                "/opt/ros/melodic/include/**",
+                "/opt/ros/melodic/include",
+                "/home/lars/catkin_ws/devel/.private/mavros_msgs/include",
+                "/home/lars/catkin_ws/devel/**"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "clang-x64"
+        }
+    ],
+    "version": 4
+}
