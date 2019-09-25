@@ -3,8 +3,14 @@
 The documentation of using PX4 with multiple UAVs and Gazebo is very sparse. This section serves as a fulfilling guide of getting started with all of that. This specific repository is part of a Research and Development course at Aarhus University. and will include custom code for this project.
 
 References:
+
 [https://dev.px4.io/v1.9.0/en/setup/dev_env.html](https://dev.px4.io/v1.9.0/en/setup/dev_env.html)
+
 [https://dev.px4.io/v1.9.0/en/setup/dev_env_linux.html](https://dev.px4.io/v1.9.0/en/setup/dev_env_linux.html)
+
+[http://gazebosim.org/](http://gazebosim.org/)
+
+[https://www.ros.org/](https://www.ros.org/)
 
 
 #### Download toolchain
