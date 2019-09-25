@@ -14,7 +14,8 @@
                 "/home/kasperlauge/catkin_ws/src/mavros/test_mavros/include/**",
                 "/usr/include/**",
                 "/opt/ros/melodic/include",
-                "${workspaceFolder}/devel/.private/mavros_msgs/include"
+                "${workspaceFolder}/devel/.private/mavros_msgs/include",
+                "${workspaceFolder}/devel/.private/slz_recognition/include"
             ],
             "name": "ROS",
             "intelliSenseMode": "gcc-x64",
