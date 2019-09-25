@@ -1,0 +1,8 @@
+/build
+/logs
+/.catkin_tools
+/devel
+/src/mavlink
+/src/mavros
+/src/.rosinstall
+/src/.rosinstall.bak
