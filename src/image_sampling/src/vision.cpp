@@ -25,19 +25,7 @@ public:
 
           cv_ptr = cv_bridge::toCvCopy(image, sensor_msgs::image_encodings::BGR8);
 
-          // cv::imshow("OPENCV_WINDOW", cv_ptr->image);
-          // cv::waitKey(0);
-
-          // auto src = cv_ptr->image;
-          // cv::Mat greyMat;
-
-          // cv::cvtColor(cv_ptr->image, greyMat, CV_BGR2GRAY);
-
-          // auto img = ;
           sensor_msgs::ImagePtr tmp = cv_ptr->toImageMsg();
-          // res.Image = tmp;
-          // res.Image()
-          // res.Image = img.get()
 
           res.Image = *tmp;
 

@@ -1,3 +1,4 @@
+sensor_msgs/Image Image
 ---
 int64[] x
 int64[] y
