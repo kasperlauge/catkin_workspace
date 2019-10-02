@@ -62,7 +62,7 @@ sh ./setup.sh
 Now you can create catkin packages within this workspace which can communicate with the UAVs. An example of this could be:
 
 ```bash
-cd ~/catkin_workspace
+cd ~/catkin_workspace/src
 catkin_create_pkg image_data roscpp std_msgs mavros_msgs sensor_msgs
 ```
 
