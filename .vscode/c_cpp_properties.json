@@ -6,7 +6,7 @@
                 "limitSymbolsToIncludedHeaders": true
             },
             "includePath": [
-                "/home/kasperlauge/catkin_ws/devel/include/**",
+                "/home/kasperlauge/catkin_workspace/devel/include/**",
                 "/opt/ros/melodic/include/**",
                 "/home/kasperlauge/catkin_ws/src/mavros/libmavconn/include/**",
                 "/home/kasperlauge/catkin_ws/src/mavros/mavros/include/**",
@@ -15,7 +15,10 @@
                 "/usr/include/**",
                 "/opt/ros/melodic/include",
                 "${workspaceFolder}/devel/.private/mavros_msgs/include",
-                "${workspaceFolder}/devel/.private/slz_recognition/include"
+                "${workspaceFolder}/devel/.private/slz_recognition/include",
+                "${workspaceFolder}/devel/.private/coordinate_transformation/include",
+                "${workspaceFolder}/devel/.private/image_sampling/include",
+                "${workspaceFolder}/devel/include/**"
             ],
             "name": "ROS",
             "intelliSenseMode": "gcc-x64",
