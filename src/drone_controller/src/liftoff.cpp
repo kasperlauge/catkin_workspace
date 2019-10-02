@@ -143,12 +143,15 @@ void UAV::run()
 
             slz_recognition::ImageInfo slz_msg;
 
-            slz_msg.request.Image = msg.response.Image;
-            slz_recognition_client.call(slz_msg);
-            std::tuple<int, int> p1 = std::make_pair(slz_msg.response.x[0], slz_msg.response.y[0]);
-            slz_positions.push_back(p1);
+            std::vector<sensor_msgs::Image> images;
+            images.push_back(msg.response.Image);
 
-            ROS_INFO("places are : %d", slz_msg.response.x[0]);
+            slz_msg.request.Image = images;
+            slz_recognition_client.call(slz_msg);
+            // std::tuple<int, int> p1 = std::make_pair(slz_msg.response.x[0], slz_msg.response.y[0]);
+            // slz_positions.push_back(p1);
+
+            // ROS_INFO("places are : %d", slz_msg.response.x[0]);
         }
 
         local_pos_pub.publish(pose);
