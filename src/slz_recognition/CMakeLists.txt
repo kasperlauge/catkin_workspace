@@ -141,11 +141,11 @@ add_library(recognizer
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 
-find_package(OpenCV)
+find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 add_executable(slz_recognition src/slz_recognition.cpp)
-target_link_libraries(slz_recognition ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} recognizer)
+target_link_libraries(slz_recognition recognizer ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
