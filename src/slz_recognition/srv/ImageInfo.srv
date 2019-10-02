@@ -1,4 +1,4 @@
-sensor_msgs/Image Image
+sensor_msgs/Image[] Images
 ---
 uint8[] x
 uint8[] y
