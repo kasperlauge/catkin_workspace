@@ -1,3 +1,4 @@
+sensor_msgs/Image Image
 ---
 uint8[] x
 uint8[] y

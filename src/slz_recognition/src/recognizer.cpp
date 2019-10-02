@@ -1,10 +1,12 @@
 #include "recognizer.h"
 
-Recognizer::Recognizer(ros::NodeHandle n) {
+Recognizer::Recognizer(ros::NodeHandle n)
+{
     Recognizer::nodeHandle = n;
 };
 
-bool Recognizer::processImages(slz_recognition::ImageInfo::Request &req, slz_recognition::ImageInfo::Response &res) {
+bool Recognizer::processImages(slz_recognition::ImageInfo::Request &req, slz_recognition::ImageInfo::Response &res)
+{
     ROS_INFO("recognize_slz called!");
 
     // Get the enriched images from the request
@@ -60,6 +62,7 @@ bool Recognizer::processImages(slz_recognition::ImageInfo::Request &req, slz_rec
     return true;
 };
 
-void Recognizer::setup() {
+void Recognizer::setup()
+{
     Recognizer::service = Recognizer::nodeHandle.advertiseService("find_slz", &Recognizer::processImages, this);
 }
