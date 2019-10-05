@@ -1,3 +1,3 @@
-uint8[] x
-uint8[] y
-uint8[] z
+float64[] x
+float64[] y
+float64[] z

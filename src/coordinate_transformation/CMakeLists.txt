@@ -7,7 +7,12 @@ project(coordinate_transformation)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
+set(OpenCV_DIR /usr/share/OpenCV)
+set(PCL_DIR /usr/lib/x86_64-linux-gnu/cmake/pcl)
+
 find_package(catkin REQUIRED COMPONENTS
+  OpenCV REQUIRED
+  PCL REQUIRED
   cv_bridge
   image_transport
   mavros_msgs
@@ -15,6 +20,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   sensor_msgs
   std_msgs
+  slz_recognition
 )
 
 ## System dependencies are found with CMake's conventions
@@ -74,6 +80,7 @@ generate_messages(
    DEPENDENCIES
    std_msgs
    sensor_msgs
+   slz_recognition
 )
 
 ################################################
@@ -121,6 +128,8 @@ catkin_package(
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
+  ${PCL_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -157,11 +166,8 @@ add_library(transformer
 #   ${catkin_LIBRARIES}
 # )
 
-find_package(OpenCV REQUIRED)
-include_directories(${OpenCV_INCLUDE_DIRS})
-
 add_executable(coordinate_transformation src/coordinate_transformation.cpp)
-target_link_libraries(coordinate_transformation transformer ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+target_link_libraries(coordinate_transformation transformer ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${PCL_LIBRARIES})
 
 #############
 ## Install ##
