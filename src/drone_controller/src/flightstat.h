@@ -8,15 +8,16 @@ private:
 protected:
     /* data */
     ros::NodeHandle _nodehandle;
+    UAVController _uav_control;
+
 public:
     FligtStatregy(ros::NodeHandle _nh);
     ~FligtStatregy();
     virtual void run() = 0;
 };
 
-FligtStatregy::FligtStatregy(ros::NodeHandle _nh)
+FligtStatregy::FligtStatregy(ros::NodeHandle _nh) : _uav_control(_nh), _nodehandle(_nh)
 {
-    this->_nodehandle = _nh;
 }
 
 FligtStatregy::~FligtStatregy()
@@ -49,16 +50,25 @@ SampleStrat::~SampleStrat()
 
 void SampleStrat::run()
 {
-    ROS_INFO("SampleStrat is run");
-    
-    // if (ros::Time::now()- created_time > ros::Duration(8) && ros::Time::now()- elapsed_time > ros::Duration(1))
-    // {
-    //     auto image = ros::topic::waitForMessage<sensor_msgs::Image>("/iris_sensors_0/camera_red_iris/image_raw", this->_nodehandle);
-    //     _sample_images.push_back(*image);
+    ros::Rate rate(20);
+    while (ros::ok())
+    {
 
-    //     ROS_INFO("Image Taken");
-    //     this->rotate(M_PI / 2);
-    // }
+        // ROS_INFO("SampleStrat is run");
+        if (ros::Time::now() - created_time > ros::Duration(20.0) && ros::Time::now() - elapsed_time > ros::Duration(4.0))
+        {
+            ROS_INFO("Image Taken");
+            
+            auto image = ros::topic::waitForMessage<sensor_msgs::Image>("/iris_sensors_0/camera_red_iris/image_raw", this->_nodehandle);
+            _sample_images.push_back(*image);
+
+
+            // _uav_control.rotate(M_PI / 2);
+
+            this->elapsed_time = ros::Time::now();
+            
+        }
+        _uav_control.publish();
+        rate.sleep();
+    }
 }
-
-

@@ -6,7 +6,6 @@ void UAV::rotate(float rad)
 
     tf2::convert(this->pose.pose.orientation, q_orig);
 
-    tf2::convert(this->pose.pose.orientation, q_orig);
     q_rot.setRPY(0, 0, rad);
 
     q_new = q_rot * q_orig;
