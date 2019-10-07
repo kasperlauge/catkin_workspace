@@ -1,7 +1,15 @@
+#ifndef UAV_FLIGHTSTRAT_H
+#define UAV_FLIGHTSTRAT_H
+
 #include "ros/ros.h"
 #include "sensor_msgs/Image.h"
 #include "uavcontrol.h"
 
+/**
+ * Base class for a Strategy pattern. There could be different overall strategies for finding a SLZ
+ * and eventually landing. These stratgies should inhierit this class.
+ * 
+ */
 class FligtStatregy
 {
 private:
@@ -12,7 +20,6 @@ protected:
 
 public:
     FligtStatregy(ros::NodeHandle _nh);
-    ~FligtStatregy();
     virtual void run() = 0;
 };
 
@@ -20,15 +27,14 @@ FligtStatregy::FligtStatregy(ros::NodeHandle _nh) : _uav_control(_nh), _nodehand
 {
 }
 
-FligtStatregy::~FligtStatregy()
-{
-}
-
+/**
+ * Flight strategy for initial sampling of images to be used for SLZ detection
+ * 
+ */
 class SampleStrat : public FligtStatregy
 {
 private:
     /* data */
-
     std::vector<sensor_msgs::Image> _sample_images;
     ros::Time created_time;
     ros::Time elapsed_time;
@@ -39,36 +45,48 @@ public:
     /* virtual */ void run();
 };
 
+/**
+ * @Constructor
+ * 
+ * @param _nh Ros nodehandle
+ */
 SampleStrat::SampleStrat(ros::NodeHandle _nh) : FligtStatregy(_nh)
 {
     created_time = ros::Time::now();
 }
 
-SampleStrat::~SampleStrat()
-{
-}
-
+/**
+ * The actual implementation of the sampling strategy. Takes an image every 4 seconds, and rotates
+ * 90 degrees between each. Runs 4 times.
+ * 
+ */
 void SampleStrat::run()
 {
+    int counter = 0;
     ros::Rate rate(20);
-    while (ros::ok())
+    while (ros::ok() && counter < 4)
     {
-
-        // ROS_INFO("SampleStrat is run");
-        if (ros::Time::now() - created_time > ros::Duration(20.0) && ros::Time::now() - elapsed_time > ros::Duration(4.0))
+        //Wait 30 seconds before starting to sample. (Could be changed with checking that UAV was close to position)
+        if (ros::Time::now() - created_time > ros::Duration(25.0) && ros::Time::now() - elapsed_time > ros::Duration(2.0))
         {
             ROS_INFO("Image Taken");
-            
+
+            //Sample an image
             auto image = ros::topic::waitForMessage<sensor_msgs::Image>("/iris_sensors_0/camera_red_iris/image_raw", this->_nodehandle);
             _sample_images.push_back(*image);
 
-
-            // _uav_control.rotate(M_PI / 2);
+            //Rotate UAV 90 degrees
+            _uav_control.rotate(M_PI / 2);
 
             this->elapsed_time = ros::Time::now();
-            
+            counter++;
         }
+
+        //publish goalpose
         _uav_control.publish();
         rate.sleep();
     }
+    ROS_INFO("Leaving strategy")
 }
+
+#endif
