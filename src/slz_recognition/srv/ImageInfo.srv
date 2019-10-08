@@ -1,3 +1,4 @@
-sensor_msgs/Image[] Image
+sensor_msgs/PointCloud2[] pointClouds
+sensor_msgs/Image[] Images
 ---
 SlzData[] SlzData

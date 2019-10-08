@@ -205,7 +205,10 @@ include_directories(
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
 
+add_library(uavlib src/uav.cpp)
+
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 add_executable(liftoff src/liftoff.cpp)
-target_link_libraries(liftoff ${catkin_LIBRARIES})
+target_link_libraries(liftoff ${catkin_LIBRARIES} uavlib)
+#add_dependencies(liftoff slz_recognition)
