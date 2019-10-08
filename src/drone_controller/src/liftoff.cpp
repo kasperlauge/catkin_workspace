@@ -2,7 +2,6 @@
 
 #include "uav.h"
 
-
 int main(int argv, char **argc)
 {
     ros::init(argv, argc, "DroneLiftoff");
