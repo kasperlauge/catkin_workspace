@@ -3,8 +3,9 @@
 
 #include "ros/ros.h"
 #include "sensor_msgs/Image.h"
+#include "sensor_msgs/PointCloud2.h"
 #include "uavcontrol.h"
-
+#include "slz_recognition/ImageInfo.h"
 /**
  * Base class for a Strategy pattern. There could be different overall strategies for finding a SLZ
  * and eventually landing. These stratgies should inhierit this class.
@@ -36,6 +37,7 @@ class SampleStrat : public FligtStatregy
 private:
     /* data */
     std::vector<sensor_msgs::Image> _sample_images;
+    std::vector<sensor_msgs::PointCloud2> _sample_cloud;
     ros::Time created_time;
     ros::Time elapsed_time;
 
@@ -71,8 +73,10 @@ void SampleStrat::run()
         {
             ROS_INFO("Image Taken");
 
-            //Sample an image
+            //Sample an image and a pointcloud
             auto image = ros::topic::waitForMessage<sensor_msgs::Image>("/iris_sensors_0/camera_red_iris/image_raw", this->_nodehandle);
+            auto cloud = ros::topic::waitForMessage<sensor_msgs::PointCloud2>("/iris_sensors_0/camera_red_iris/depth/points", this->_nodehandle);
+            _sample_cloud.push_back(*cloud);
             _sample_images.push_back(*image);
 
             //Rotate UAV 90 degrees
@@ -81,12 +85,24 @@ void SampleStrat::run()
             this->elapsed_time = ros::Time::now();
             counter++;
         }
-
         //publish goalpose
         _uav_control.publish();
         rate.sleep();
     }
-    ROS_INFO("Leaving strategy")
+
+    // auto tmp = ros::service::waitForService("find_slz");
+    slz_recognition::ImageInfo msg;
+    msg.request.Images = _sample_images;
+    msg.request.pointClouds = _sample_cloud;
+
+    ros::ServiceClient client = this->_nodehandle.serviceClient<slz_recognition::ImageInfo>("find_slz");
+
+    if (client.call(msg))
+    {
+        // DO something!
+    }
+
+    ROS_INFO("Leaving strategy");
 }
 
 #endif

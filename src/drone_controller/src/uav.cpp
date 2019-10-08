@@ -100,16 +100,6 @@ void UAV::run()
             _flightstrat->run();
         }
 
-        // if (!(counter % 100) & counter > 500)
-        // {
-        //     auto image = ros::topic::waitForMessage<sensor_msgs::Image>("/iris_sensors_0/camera_red_iris/image_raw", this->nodeHandle);
-        //     sample_images.push_back(*image);
-
-        //     ROS_INFO("Image Taken");
-        //     this->rotate(M_PI / 2);
-        //     rounds++;
-        // }
-
         local_pos_pub.publish(this->pose);
         ros::spinOnce();
         rate.sleep();

@@ -71,6 +71,8 @@ UAVController::UAVController(ros::NodeHandle _nh) : _nodehandle(_nh)
     this->_position_publisher = this->_nodehandle.advertise<geometry_msgs::PoseStamped>("/uav0/mavros/setpoint_position/local", 10);
     auto pos = ros::topic::waitForMessage<geometry_msgs::PoseStamped>("/uav0/mavros/local_position/pose",this->_nodehandle);
     geometry_msgs::PoseStamped tmp;
+    
+    //Set iniital position
     this->_goalpose.pose.position.z = 6.0;
     this->_goalpose.pose.position.y = 0.0;
     this->_goalpose.pose.position.x = 0.0;
