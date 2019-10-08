@@ -1,5 +1,6 @@
 #include "recognizer.h"
 #include <slz_recognition/SlzData.h>
+#include "pipe.h"
 
 Recognizer::Recognizer(ros::NodeHandle n)
 {
@@ -10,81 +11,104 @@ bool Recognizer::processImages(slz_recognition::ImageInfo::Request &req, slz_rec
 {
     ROS_INFO("recognize_slz called!");
 
+    // imagepipe<int> tmp(a, {new addingFilter(), new addingFilter()});
+    // tmp.runfilter();
+
     // Get the enriched images from the request
     // Mocked by the raw image2
-    auto image1 = ros::topic::waitForMessage<sensor_msgs::Image>("/iris_sensors_0/camera_red_iris/image_raw", Recognizer::nodeHandle);
-    auto image2 = ros::topic::waitForMessage<sensor_msgs::Image>("/iris_sensors_0/camera_red_iris/image_raw", Recognizer::nodeHandle);
-    auto image3 = ros::topic::waitForMessage<sensor_msgs::Image>("/iris_sensors_0/camera_red_iris/image_raw", Recognizer::nodeHandle);
-    auto image4 = ros::topic::waitForMessage<sensor_msgs::Image>("/iris_sensors_0/camera_red_iris/image_raw", Recognizer::nodeHandle);
+    // auto image1 = ros::topic::waitForMessage<sensor_msgs::Image>("/iris_sensors_0/camera_red_iris/image_raw", Recognizer::nodeHandle);
+    // auto image2 = ros::topic::waitForMessage<sensor_msgs::Image>("/iris_sensors_0/camera_red_iris/image_raw", Recognizer::nodeHandle);
+    // auto image3 = ros::topic::waitForMessage<sensor_msgs::Image>("/iris_sensors_0/camera_red_iris/image_raw", Recognizer::nodeHandle);
+    // auto image4 = ros::topic::waitForMessage<sensor_msgs::Image>("/iris_sensors_0/camera_red_iris/image_raw", Recognizer::nodeHandle);
 
-    std::vector<sensor_msgs::ImageConstPtr> images;
-    images.reserve(4);
+    // std::vector<sensor_msgs::ImageConstPtr> images;
+    // images.reserve(4);
 
-    images.push_back(image1);
-    images.push_back(image2);
-    images.push_back(image3);
-    images.push_back(image4);
+    std::vector<cv::Mat> _images;
+
+    // auto my_cv_ptr = cv_bridge::toCvCopy(req.Images[], sensor_msgs::image_encodings::BGR8);
+
+    for (auto &&i : req.Images)
+    {
+        auto my_cv_ptr = cv_bridge::toCvCopy(i, sensor_msgs::image_encodings::BGR8);
+        _images.push_back(my_cv_ptr->image);
+    }
+    for (auto &&i : _images)
+    {
+        imagepipe<cv::Mat> hep(&i, {new GaussFilter(), new GaborFilter()});
+        hep.runfilter();    
+    }
+
+    // for (size_t i = 0; i < req.Images.size(); i++)
+    // {
+
+    // }
+
+    // images.push_back(image1);
+    // images.push_back(image2);
+    // images.push_back(image3);
+    // images.push_back(image4);
+
+    ROS_INFO("GOT HERE");
 
     // Images variable should come from request
-
     // Prepare return value
     std::vector<slz_recognition::SlzData> imageData;
-    auto numberOfImages = images.size();
-    imageData.reserve(numberOfImages);
 
-    for (int i = 0; i < numberOfImages; i++) {
-        cv_bridge::CvImagePtr cv_ptr;
-        cv::Mat output;
-        cv::Mat inputGrey;
-        cv::Mat thImg;
-        cv::Mat reverseThImg;
-        cv::Mat candidateRegions;
-        cv::Mat typeTransform;
+    // auto numberOfImages = images.size();
+    // imageData.reserve(numberOfImages);
 
-        cv_ptr = cv_bridge::toCvCopy(images[i], sensor_msgs::image_encodings::BGR8);
+    // for (int i = 0; i < numberOfImages; i++)
+    // {
+    //     cv_bridge::CvImagePtr cv_ptr;
+    //     cv::Mat output;
+    //     cv::Mat inputGrey;
+    //     cv::Mat thImg;
+    //     cv::Mat reverseThImg;
+    //     cv::Mat candidateRegions;
+    //     cv::Mat typeTransform;
 
+    //     cv_ptr = cv_bridge::toCvCopy(images[i], sensor_msgs::image_encodings::BGR8);
 
-        // Process image - this part should find all regions which makes good SLZs
-        // After they have been found mark all the SLZ pixels a 255 and all other pixels as 0
-        cv::cvtColor(cv_ptr->image, inputGrey, cv::COLOR_BGR2GRAY);
+    //     // Process image - this part should find all regions which makes good SLZs
+    //     // After they have been found mark all the SLZ pixels a 255 and all other pixels as 0
+    //     cv::cvtColor(cv_ptr->image, inputGrey, cv::COLOR_BGR2GRAY);
 
-        int kernel_size = 9;
-        double sig = 5, lm = 4, gm = 0.05, ps = CV_PI/4;
-        double theta = 45;
-        double th = 15;
-        double maxValue = 255;
+    //     int kernel_size = 9;
+    //     double sig = 5, lm = 4, gm = 0.05, ps = CV_PI / 4;
+    //     double theta = 45;
+    //     double th = 15;
+    //     double maxValue = 255;
 
-        auto gaborKernel = cv::getGaborKernel(cv::Size(kernel_size,kernel_size), sig, theta, lm, gm, ps, CV_32F);
-        cv::filter2D(inputGrey, output, CV_32F, gaborKernel);
-        cv::threshold(output, thImg, th, maxValue, cv::THRESH_BINARY);
-        cv::subtract(cv::Scalar::all(255),thImg,reverseThImg);
+    //     auto gaborKernel = cv::getGaborKernel(cv::Size(kernel_size, kernel_size), sig, theta, lm, gm, ps, CV_32F);
+    //     cv::filter2D(inputGrey, output, CV_32F, gaborKernel);
+    //     cv::threshold(output, thImg, th, maxValue, cv::THRESH_BINARY);
+    //     cv::subtract(cv::Scalar::all(255), thImg, reverseThImg);
 
+    //     // Extract image coordinates based on all non-zero coordinates
+    //     cv::Mat processedImage = reverseThImg;
+    //     processedImage.convertTo(typeTransform, CV_8UC1);
+    //     cv::findNonZero(typeTransform, candidateRegions);
+    //     auto numberOfNonZeroCoordinates = candidateRegions.total();
 
+    //     slz_recognition::SlzData imgRes;
+    //     imgRes.x.reserve(numberOfNonZeroCoordinates);
+    //     imgRes.y.reserve(numberOfNonZeroCoordinates);
 
-        // Extract image coordinates based on all non-zero coordinates
-        cv::Mat processedImage = reverseThImg;
-        processedImage.convertTo(typeTransform, CV_8UC1);
-        cv::findNonZero(typeTransform, candidateRegions);
-        auto numberOfNonZeroCoordinates = candidateRegions.total();
+    //     for (int j = 0; j < numberOfNonZeroCoordinates; j++)
+    //     {
+    //         imgRes.x.push_back(candidateRegions.at<cv::Point>(j).x);
+    //         imgRes.y.push_back(candidateRegions.at<cv::Point>(j).y);
+    //     }
 
-        slz_recognition::SlzData imgRes;
-        imgRes.x.reserve(numberOfNonZeroCoordinates);
-        imgRes.y.reserve(numberOfNonZeroCoordinates);
+    //     res.SlzData.push_back(imgRes);
 
-        for (int j = 0; j < numberOfNonZeroCoordinates; j++) {
-            imgRes.x.push_back(candidateRegions.at<cv::Point>(j).x);
-            imgRes.y.push_back(candidateRegions.at<cv::Point>(j).y);
-        }
-
-        res.SlzData.push_back(imgRes);
-        
-
-        // cv::imshow("OPENCV_WINDOW1", inputGrey);
-        // cv::imshow("OPENCV_WINDOW2", output);
-        // cv::imshow("OPENCV_WINDOW3", thImg);
-        // cv::imshow("OPENCV_WINDOW4", reverseThImg);
-        // cv::waitKey(0);
-    }
+    //     // cv::imshow("OPENCV_WINDOW1", inputGrey);
+    //     // cv::imshow("OPENCV_WINDOW2", output);
+    //     // cv::imshow("OPENCV_WINDOW3", thImg);
+    //     // cv::imshow("OPENCV_WINDOW4", reverseThImg);
+    //     // cv::waitKey(0);
+    // }
 
     return true;
 };

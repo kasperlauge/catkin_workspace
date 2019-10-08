@@ -106,21 +106,21 @@ void UAV::run()
         counter++;
     }
 
-    slz_recognition::ImageInfo slz_msg;
-    slz_msg.request.Images = sample_images;
+    // slz_recognition::ImageInfo slz_msg;
+    // slz_msg.request.Images = sample_images;
 
-    if (slz_recognition_client.call(slz_msg))
-    {
+    // if (slz_recognition_client.call(slz_msg))
+    // {
 
-        std::tuple<int, int> p1 = std::make_pair(slz_msg.response.x[0], slz_msg.response.y[0]);
-        slz_positions.push_back(p1);
+    //     std::tuple<int, int> p1 = std::make_pair(slz_msg.response.x[0], slz_msg.response.y[0]);
+    //     slz_positions.push_back(p1);
 
-        ROS_INFO("places are : %d", slz_msg.response.x[0]);
-    }
-    else
-    {
-        ROS_WARN("Could not reach slz_recognition service");
-    }
+    //     ROS_INFO("places are : %d", slz_msg.response.x[0]);
+    // }
+    // else
+    // {
+    //     ROS_WARN("Could not reach slz_recognition service");
+    // }
 }
 
 void UAV::setPose(geometry_msgs::PoseStamped _pose)
