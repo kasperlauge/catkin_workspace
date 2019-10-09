@@ -1,5 +1,4 @@
 #include "recognizer.h"
-#include <slz_recognition/SlzData.h>
 
 Recognizer::Recognizer(ros::NodeHandle n)
 {
@@ -10,27 +9,8 @@ bool Recognizer::processImages(slz_recognition::ImageInfo::Request &req, slz_rec
 {
     ROS_INFO("recognize_slz called!");
 
-    // Get the enriched images from the request
-    // Mocked by the raw image2
-    auto image1 = ros::topic::waitForMessage<sensor_msgs::Image>("/iris_sensors_0/camera_red_iris/image_raw", Recognizer::nodeHandle);
-    auto image2 = ros::topic::waitForMessage<sensor_msgs::Image>("/iris_sensors_0/camera_red_iris/image_raw", Recognizer::nodeHandle);
-    auto image3 = ros::topic::waitForMessage<sensor_msgs::Image>("/iris_sensors_0/camera_red_iris/image_raw", Recognizer::nodeHandle);
-    auto image4 = ros::topic::waitForMessage<sensor_msgs::Image>("/iris_sensors_0/camera_red_iris/image_raw", Recognizer::nodeHandle);
-
-    std::vector<sensor_msgs::ImageConstPtr> images;
-    images.reserve(4);
-
-    images.push_back(image1);
-    images.push_back(image2);
-    images.push_back(image3);
-    images.push_back(image4);
-
-    // Images variable should come from request
-
-    // Prepare return value
-    std::vector<slz_recognition::SlzData> imageData;
+    std::vector<sensor_msgs::Image> images(req.Images);
     auto numberOfImages = images.size();
-    imageData.reserve(numberOfImages);
 
     for (int i = 0; i < numberOfImages; i++) {
         cv_bridge::CvImagePtr cv_ptr;
@@ -67,7 +47,7 @@ bool Recognizer::processImages(slz_recognition::ImageInfo::Request &req, slz_rec
         cv::findNonZero(typeTransform, candidateRegions);
         auto numberOfNonZeroCoordinates = candidateRegions.total();
 
-        slz_recognition::SlzData imgRes;
+        slz_recognition::ImageCoordinateData imgRes;
         imgRes.x.reserve(numberOfNonZeroCoordinates);
         imgRes.y.reserve(numberOfNonZeroCoordinates);
 
@@ -78,7 +58,8 @@ bool Recognizer::processImages(slz_recognition::ImageInfo::Request &req, slz_rec
             imgRes.y.push_back(y);
         }
 
-        res.SlzData.push_back(imgRes);
+        res.SlzData.ImageCoordinateData.push_back(imgRes);
+        res.SlzData.PointClouds = req.pointClouds;
         
 
         // cv::imshow("OPENCV_WINDOW1", inputGrey);
