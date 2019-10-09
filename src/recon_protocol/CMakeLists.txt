@@ -15,17 +15,8 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   sensor_msgs
   slz_recognition
+  drone_controller
   std_msgs
-)
-
-find_package(catkin REQUIRED COMPONENTS
-  image_transport
-  mavros_msgs
-  message_generation
-  roscpp
-  sensor_msgs
-  std_msgs
-  slz_recognition
 )
 
 ## System dependencies are found with CMake's conventions

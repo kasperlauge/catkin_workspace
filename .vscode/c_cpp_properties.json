@@ -16,6 +16,7 @@
                 "/opt/ros/melodic/include",
                 "${workspaceFolder}/devel/.private/mavros_msgs/include",
                 "${workspaceFolder}/devel/.private/slz_recognition/include",
+                "${workspaceFolder}/devel/.private/drone_controller/include",
                 "${workspaceFolder}/devel/.private/coordinate_transformation/include",
                 "${workspaceFolder}/devel/.private/image_sampling/include",
                 "${workspaceFolder}/devel/include/**",
