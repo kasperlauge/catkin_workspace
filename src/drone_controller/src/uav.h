@@ -32,11 +32,17 @@ private:
     geometry_msgs::PoseStamped pose;
 
     std::vector<std::tuple<int, int>> slz_positions;
-
+    void setup();
     void state_cb(const mavros_msgs::State::ConstPtr &msg);
     void setPose(geometry_msgs::PoseStamped _pose);
-    void rotate(float rad);
     void setInitialPosition();
+
+    // enum FligtStategyTypes
+    // {
+    //     SAMPLE
+    // };
+
+    // void setStrategy(int type);
 
 public:
     UAV(ros::NodeHandle n);
