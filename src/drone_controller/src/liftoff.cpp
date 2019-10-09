@@ -10,7 +10,7 @@ int main(int argv, char **argc)
 
     UAV drone(n);
 
-    drone.run();
+    ros::spin();
 
     return 0;
 }
