@@ -4,6 +4,7 @@
 #include "ros/ros.h"
 #include "geometry_msgs/PoseStamped.h"
 #include "tf/tf.h"
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 /**
  * UAV Controller
@@ -41,8 +42,7 @@ void UAVController::publish()
  * @param rad Amount of rads to rotate UAV
  */
 void UAVController::rotate(double rad)
-{
-    
+{ 
     // Declare quaternions for future use
     tf2::Quaternion q_orig, q_rot, q_new;
 

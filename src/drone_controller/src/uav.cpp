@@ -26,16 +26,14 @@ void UAV::setup()
     this->local_pos_pub = this->nodeHandle.advertise<geometry_msgs::PoseStamped>("/uav0/mavros/setpoint_position/local", 10);
     this->arming_client = this->nodeHandle.serviceClient<mavros_msgs::CommandBool>("/uav0/mavros/cmd/arming");
     this->set_mode_client = this->nodeHandle.serviceClient<mavros_msgs::SetMode>("/uav0/mavros/set_mode");
-    this->get_image_client = this->nodeHandle.serviceClient<image_sampling::GetSampledImages>("/GetImage");
-    this->slz_recognition_client = this->nodeHandle.serviceClient<slz_recognition::ImageInfo>("find_slz");
+    this->service = this->nodeHandle.advertiseService("sampling", &UAV::sampleImages, this);
 }
 
-void UAV::run()
+bool UAV::sampleImages(drone_controller::Sampleimages::Request &req, drone_controller::Sampleimages::Response &res)
 {
 
     ROS_INFO("RUN Called");
-
-    std::vector<sensor_msgs::Image> sample_images;
+    bool done = false;
 
     // Cannot exceed 500ms due to The px4 flight stack has a timeout of 500ms between two Offboard commands
     // https://dev.px4.io/v1.9.0/en/ros/mavros_offboard.html
@@ -60,11 +58,8 @@ void UAV::run()
 
     this->last_request = ros::Time::now();
 
-    //Counter for timer
-    size_t counter = 0;
-
     ros::Rate rate2(10);
-    while (ros::ok())
+    while (ros::ok() && !done)
     {
 
         if (current_state.mode != "OFFBOARD" &&
@@ -93,28 +88,55 @@ void UAV::run()
 
         if (current_state.mode == "OFFBOARD" && current_state.armed)
         {
-            _flightstrat->run();
+            auto created_time = ros::Time::now();
+            auto elapsed_time = ros::Time::now();
+            int counter = 0;
+            ros::Rate rate(20);
+            while (ros::ok() && counter < 4)
+            {
+                //Wait 30 seconds before starting to sample. (Could be changed with checking that UAV was close to position)
+                if (ros::Time::now() - created_time > ros::Duration(25.0) && ros::Time::now() - elapsed_time > ros::Duration(2.0))
+                {
+                    ROS_INFO("Image Taken");
+
+                    //Sample an image and a pointcloud
+                    auto image = ros::topic::waitForMessage<sensor_msgs::Image>("/iris_sensors_0/camera_red_iris/image_raw", this->nodeHandle);
+                    auto cloud = ros::topic::waitForMessage<sensor_msgs::PointCloud2>("/iris_sensors_0/camera_red_iris/depth/points", this->nodeHandle);
+                    res.Images.push_back(*image);
+                    res.pointClouds.push_back(*cloud);
+
+                    //Rotate UAV 90 degrees
+                    this->_uav_control.rotate(M_PI / 2);
+
+                    elapsed_time = ros::Time::now();
+                    counter++;
+                }
+                //publish goalpose
+                _uav_control.publish();
+                rate.sleep();
+            }
+            done = true;
         }
 
         local_pos_pub.publish(this->pose);
         ros::spinOnce();
         rate.sleep();
-        counter++;
     }
+
+    return true;
 }
+
 
 void UAV::setPose(geometry_msgs::PoseStamped _pose)
 {
     this->pose = _pose;
 }
 
-UAV::UAV(ros::NodeHandle n)
+UAV::UAV(ros::NodeHandle n) : _uav_control(n)
 {
     this->nodeHandle = n;
 
     // Set Callback for being able to monitor State
-    
-    this->_flightstrat = new SampleStrat(this->nodeHandle);
     this->setup();
 };
 
@@ -123,7 +145,6 @@ UAV::UAV(ros::NodeHandle n)
  */
 UAV::~UAV()
 {
-    delete _flightstrat;
 }
 
 void UAV::state_cb(const mavros_msgs::State::ConstPtr &msg)
