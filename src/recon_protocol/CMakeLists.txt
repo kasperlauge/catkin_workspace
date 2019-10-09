@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(coordinate_transformation)
+project(recon_protocol)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -7,15 +7,18 @@ project(coordinate_transformation)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-set(OpenCV_DIR /usr/share/OpenCV)
-set(PCL_DIR /usr/lib/x86_64-linux-gnu/cmake/pcl)
-
-set(slz_recognition_DIR ../slz_recognition)
+find_package(catkin REQUIRED COMPONENTS
+  coordinate_transformation
+  message_generation
+  image_sampling
+  mavros_msgs
+  roscpp
+  sensor_msgs
+  slz_recognition
+  std_msgs
+)
 
 find_package(catkin REQUIRED COMPONENTS
-  OpenCV REQUIRED
-  PCL REQUIRED
-  cv_bridge
   image_transport
   mavros_msgs
   message_generation
@@ -59,15 +62,14 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(
-  FILES
-  CoordinateData.msg
-)
+# add_message_files(
+#   FILES
+# )
 
 ## Generate services in the 'srv' folder
 add_service_files(
   FILES
-  CoordinateInfo.srv
+  ProtocolInfo.srv
 )
 
 ## Generate actions in the 'action' folder
@@ -82,7 +84,6 @@ generate_messages(
    DEPENDENCIES
    std_msgs
    sensor_msgs
-   slz_recognition
 )
 
 ################################################
@@ -115,9 +116,10 @@ generate_messages(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS include
-#  LIBRARIES coordinate_transformation
-#  CATKIN_DEPENDS mavros_msgs roscpp sensor_msgs std_msgs
+ INCLUDE_DIRS include
+#  LIBRARIES slz_recognition
+#  CATKIN_DEPENDS cv_bridge image_transport mavros_msgs message_generation roscpp sensor_msgs std_msgs
+#  DEPENDS system_lib
   CATKIN_DEPENDS message_runtime
 )
 
@@ -130,17 +132,14 @@ catkin_package(
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
-  ${OpenCV_INCLUDE_DIRS}
-  ${PCL_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/coordinate_transformation.cpp
+#   src/${PROJECT_NAME}/slz_recognition.cpp
 # )
-
-add_library(transformer
-  src/transformer.cpp
+add_library(protocol_runner
+  src/protocol_runner.cpp
 )
 
 ## Add cmake target dependencies of the library
@@ -151,7 +150,9 @@ add_library(transformer
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/coordinate_transformation_node.cpp)
+
+add_executable(recon_protocol src/recon_protocol.cpp)
+target_link_libraries(recon_protocol protocol_runner ${catkin_LIBRARIES})
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -167,9 +168,6 @@ add_library(transformer
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
-
-add_executable(coordinate_transformation src/coordinate_transformation.cpp)
-target_link_libraries(coordinate_transformation transformer ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${PCL_LIBRARIES})
 
 #############
 ## Install ##
@@ -218,7 +216,7 @@ target_link_libraries(coordinate_transformation transformer ${catkin_LIBRARIES} 
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_coordinate_transformation.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_slz_recognition.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
