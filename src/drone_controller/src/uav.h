@@ -1,7 +1,6 @@
 #include "mavros_msgs/State.h"
 #include "sensor_msgs/NavSatFix.h"
 #include <geometry_msgs/PoseStamped.h>
-#include "ros/ros.h"
 #include <mavros_msgs/CommandBool.h>
 #include "mavros_msgs/CommandTOL.h"
 #include <mavros_msgs/SetMode.h>
