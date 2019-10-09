@@ -9,6 +9,9 @@
 #include "sensor_msgs/NavSatFix.h"
 #include "sensor_msgs/Image.h"
 #include "coordinate_transformation/CoordinateInfo.h"
+#include <pcl_ros/point_cloud.h>
+#include <pcl/point_types.h>
+#include <pcl_conversions/pcl_conversions.h>
 
 class Transformer {
     ros::NodeHandle nodeHandle;

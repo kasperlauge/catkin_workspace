@@ -15,7 +15,12 @@
                 "/usr/include/**",
                 "/opt/ros/melodic/include",
                 "${workspaceFolder}/devel/.private/mavros_msgs/include",
-                "${workspaceFolder}/devel/.private/slz_recognition/include"
+                "${workspaceFolder}/devel/.private/slz_recognition/include",
+                "${workspaceFolder}/devel/.private/coordinate_transformation/include",
+                "${workspaceFolder}/devel/.private/image_sampling/include",
+                "${workspaceFolder}/devel/include/**",
+                "/usr/include/pcl-1.8",
+                "/usr/include/eigen3"
             ],
             "name": "ROS",
             "intelliSenseMode": "gcc-x64",

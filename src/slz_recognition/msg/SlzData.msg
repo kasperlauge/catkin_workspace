@@ -1,2 +1,2 @@
-uint8[] x
-uint8[] y
+uint64[] x
+uint64[] y

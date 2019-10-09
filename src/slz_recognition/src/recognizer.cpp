@@ -72,8 +72,10 @@ bool Recognizer::processImages(slz_recognition::ImageInfo::Request &req, slz_rec
         imgRes.y.reserve(numberOfNonZeroCoordinates);
 
         for (int j = 0; j < numberOfNonZeroCoordinates; j++) {
-            imgRes.x.push_back(candidateRegions.at<cv::Point>(j).x);
-            imgRes.y.push_back(candidateRegions.at<cv::Point>(j).y);
+            int x = candidateRegions.at<cv::Point>(j).x;
+            int y = candidateRegions.at<cv::Point>(j).y;
+            imgRes.x.push_back(x);
+            imgRes.y.push_back(y);
         }
 
         res.SlzData.push_back(imgRes);
