@@ -71,5 +71,6 @@
         "typeindex": "cpp",
         "typeinfo": "cpp",
         "*.ipp": "cpp"
-    }
+    },
+    "ros.distro": "melodic"
 }
