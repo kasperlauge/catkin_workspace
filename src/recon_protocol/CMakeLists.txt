@@ -53,9 +53,10 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-# )
+add_message_files(
+  FILES
+  SLZCoordinates.msg
+)
 
 ## Generate services in the 'srv' folder
 add_service_files(
@@ -75,6 +76,7 @@ generate_messages(
    DEPENDENCIES
    std_msgs
    sensor_msgs
+   coordinate_transformation
 )
 
 ################################################
@@ -111,7 +113,7 @@ catkin_package(
 #  LIBRARIES slz_recognition
 #  CATKIN_DEPENDS cv_bridge image_transport mavros_msgs message_generation roscpp sensor_msgs std_msgs
 #  DEPENDS system_lib
-  CATKIN_DEPENDS message_runtime
+  CATKIN_DEPENDS message_runtime coordinate_transformation
 )
 
 ###########
