@@ -24,12 +24,13 @@ bool ProtocolRunner::handleProtocolCall(recon_protocol::ProtocolInfo::Request &r
             coordinateMsg.request.SlzData = reconMsg.response.SlzData;
             if (this->transform_coordinates_client.call(coordinateMsg)) {
                 ROS_INFO("Coordinate transform called");
-                for (int i = 0; i < coordinateMsg.response.CoordinateData.at(1).x.size(); i++) {
-                    int x = coordinateMsg.response.CoordinateData.at(1).x.at(i);
-                    int y = coordinateMsg.response.CoordinateData.at(1).y.at(i);
-                    int z = coordinateMsg.response.CoordinateData.at(1).z.at(i);
-                    std::cout << "[x,y,z]: [" << x << "," << y << "," << z << "]" << std::endl;
-                }
+                // for (int i = 0; i < coordinateMsg.response.CoordinateData.at(1).x.size(); i++) {
+                //     int x = coordinateMsg.response.CoordinateData.at(1).x.at(i);
+                //     int y = coordinateMsg.response.CoordinateData.at(1).y.at(i);
+                //     int z = coordinateMsg.response.CoordinateData.at(1).z.at(i);
+                //     std::cout << "[x,y,z]: [" << x << "," << y << "," << z << "]" << std::endl;
+                // }
+                // ProtocolRunner::coordinate_publisher.publish(coordinateMsg.response.CoordinateData);
             }
         }
     }
@@ -46,5 +47,9 @@ void ProtocolRunner::setup()
     this->sampling_client = this->nodeHandle.serviceClient<drone_controller::Sampleimages>("sampling");
     this->slz_recognition_client = this->nodeHandle.serviceClient<slz_recognition::ImageInfo>("find_slz");
     this->transform_coordinates_client = this->nodeHandle.serviceClient<coordinate_transformation::CoordinateInfo>("transform_coordinates");
+
+    // Advertise topic with coordinates
+    // ProtocolRunner::coordinate_publisher = ProtocolRunner::nodeHandle.advertise<coordinate_transformation::CoordinateData>("slz_coordinates", 1000);
+
     ProtocolRunner::service = ProtocolRunner::nodeHandle.advertiseService("recon_protocol", &ProtocolRunner::handleProtocolCall, this);
 }

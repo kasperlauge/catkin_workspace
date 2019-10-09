@@ -11,7 +11,6 @@ project(recon_protocol)
 find_package(catkin REQUIRED COMPONENTS
   coordinate_transformation
   message_generation
-  image_sampling
   mavros_msgs
   roscpp
   sensor_msgs

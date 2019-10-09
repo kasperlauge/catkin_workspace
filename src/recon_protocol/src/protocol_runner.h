@@ -16,6 +16,7 @@ class ProtocolRunner {
     ros::ServiceClient sampling_client;
     ros::ServiceClient slz_recognition_client;
     ros::ServiceClient transform_coordinates_client;
+    // ros::Publisher coordinate_publisher;
     public:
         ProtocolRunner(ros::NodeHandle n);
         bool handleProtocolCall(recon_protocol::ProtocolInfo::Request &req, recon_protocol::ProtocolInfo::Response &res);
