@@ -1,2 +1,2 @@
-uint64[] x
-uint64[] y
+ImageCoordinateData[] ImageCoordinateData
+sensor_msgs/PointCloud2[] PointClouds

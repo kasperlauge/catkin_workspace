@@ -7,7 +7,12 @@ project(slz_recognition)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
+set(OpenCV_DIR /usr/share/OpenCV)
+set(PCL_DIR /usr/lib/x86_64-linux-gnu/cmake/pcl)
+
 find_package(catkin REQUIRED COMPONENTS
+  OpenCV REQUIRED
+  PCL REQUIRED
   cv_bridge
   image_transport
   mavros_msgs
@@ -53,6 +58,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
 add_message_files(
   FILES
+  ImageCoordinateData.msg
   SlzData.msg
 )
 
@@ -122,7 +128,10 @@ catkin_package(
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
+  ${PCL_INCLUDE_DIRS}
 )
+
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
@@ -141,11 +150,8 @@ add_library(recognizer
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 
-find_package(OpenCV REQUIRED)
-include_directories(${OpenCV_INCLUDE_DIRS})
-
 add_executable(slz_recognition src/slz_recognition.cpp)
-target_link_libraries(slz_recognition recognizer ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+target_link_libraries(slz_recognition recognizer ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${PCL_LIBRARIES})
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the

@@ -1,6 +1,5 @@
-#include "ros/ros.h"
-
 #include "uav.h"
+
 
 int main(int argv, char **argc)
 {

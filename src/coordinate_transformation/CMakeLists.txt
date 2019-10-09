@@ -118,7 +118,7 @@ catkin_package(
   INCLUDE_DIRS include
 #  LIBRARIES coordinate_transformation
 #  CATKIN_DEPENDS mavros_msgs roscpp sensor_msgs std_msgs
-  CATKIN_DEPENDS message_runtime
+  CATKIN_DEPENDS message_runtime slz_recognition
 )
 
 ###########
