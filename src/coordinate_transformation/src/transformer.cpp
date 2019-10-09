@@ -15,6 +15,10 @@ bool Transformer::transformCoordinates(coordinate_transformation::CoordinateInfo
     auto numberOfPointClouds = imageInfos.size();
     res.CoordinateData.reserve(numberOfPointClouds);
 
+    ROS_INFO("allocated vectors");
+
+    ROS_INFO_STREAM("imagesize: " << imageInfos.size());
+
 
     // Loop through all of the sampled image data - for each imagedata
     for(std::vector<int>::size_type i = 0; i != imageInfos.size(); i++) {
@@ -23,8 +27,10 @@ bool Transformer::transformCoordinates(coordinate_transformation::CoordinateInfo
         coordinateData.x.reserve(imageInfos.at(i).x.size());
         coordinateData.y.reserve(imageInfos.at(i).x.size());
         coordinateData.z.reserve(imageInfos.at(i).x.size());
+        ROS_INFO_STREAM("outer loop: " << i);
 
         for (int j = 0; j < imageInfos.at(i).x.size(); j++) {
+            ROS_INFO_STREAM("inner loop: " << j);
             // https://answers.ros.org/question/191265/pointcloud2-access-data/
             auto pointCloud = pointClouds.at(i);
             int u = imageInfos.at(i).x.at(j);
@@ -47,6 +53,8 @@ bool Transformer::transformCoordinates(coordinate_transformation::CoordinateInfo
 
         res.CoordinateData.push_back(coordinateData);
     }
+
+    ROS_INFO("Done looping");
 
     return true;
 };

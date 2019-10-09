@@ -9,6 +9,7 @@
 #include "sensor_msgs/NavSatFix.h"
 #include "sensor_msgs/Image.h"
 #include "recon_protocol/ProtocolInfo.h"
+#include "recon_protocol/SLZCoordinates.h"
 
 class ProtocolRunner {
     ros::NodeHandle nodeHandle;
@@ -16,7 +17,7 @@ class ProtocolRunner {
     ros::ServiceClient sampling_client;
     ros::ServiceClient slz_recognition_client;
     ros::ServiceClient transform_coordinates_client;
-    // ros::Publisher coordinate_publisher;
+    ros::Publisher coordinate_publisher;
     public:
         ProtocolRunner(ros::NodeHandle n);
         bool handleProtocolCall(recon_protocol::ProtocolInfo::Request &req, recon_protocol::ProtocolInfo::Response &res);

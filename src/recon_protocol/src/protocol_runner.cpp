@@ -15,6 +15,7 @@ bool ProtocolRunner::handleProtocolCall(recon_protocol::ProtocolInfo::Request &r
     drone_controller::Sampleimages sampleMsg;
 
     if (this->sampling_client.call(sampleMsg)) {
+        ROS_INFO("Sampling returned");
         slz_recognition::ImageInfo reconMsg;
         reconMsg.request.Images = sampleMsg.response.Images;
         reconMsg.request.pointClouds = sampleMsg.response.pointClouds;
@@ -23,14 +24,18 @@ bool ProtocolRunner::handleProtocolCall(recon_protocol::ProtocolInfo::Request &r
             coordinate_transformation::CoordinateInfo coordinateMsg;
             coordinateMsg.request.SlzData = reconMsg.response.SlzData;
             if (this->transform_coordinates_client.call(coordinateMsg)) {
-                ROS_INFO("Coordinate transform called");
+                ROS_INFO("Coordinate transform returned");
                 // for (int i = 0; i < coordinateMsg.response.CoordinateData.at(1).x.size(); i++) {
                 //     int x = coordinateMsg.response.CoordinateData.at(1).x.at(i);
                 //     int y = coordinateMsg.response.CoordinateData.at(1).y.at(i);
                 //     int z = coordinateMsg.response.CoordinateData.at(1).z.at(i);
                 //     std::cout << "[x,y,z]: [" << x << "," << y << "," << z << "]" << std::endl;
                 // }
-                // ProtocolRunner::coordinate_publisher.publish(coordinateMsg.response.CoordinateData);
+
+                std::vector<coordinate_transformation::CoordinateData> coordinateData(coordinateMsg.response.CoordinateData);
+                recon_protocol::SLZCoordinates slz_coordinates;
+                slz_coordinates.CoordinateData = coordinateData;
+                ProtocolRunner::coordinate_publisher.publish(slz_coordinates);
             }
         }
     }
@@ -49,7 +54,7 @@ void ProtocolRunner::setup()
     this->transform_coordinates_client = this->nodeHandle.serviceClient<coordinate_transformation::CoordinateInfo>("transform_coordinates");
 
     // Advertise topic with coordinates
-    // ProtocolRunner::coordinate_publisher = ProtocolRunner::nodeHandle.advertise<coordinate_transformation::CoordinateData>("slz_coordinates", 1000);
+    ProtocolRunner::coordinate_publisher = ProtocolRunner::nodeHandle.advertise<recon_protocol::SLZCoordinates>("slz_coordinates", 1000);
 
     ProtocolRunner::service = ProtocolRunner::nodeHandle.advertiseService("recon_protocol", &ProtocolRunner::handleProtocolCall, this);
 }
