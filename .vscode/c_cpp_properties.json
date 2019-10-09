@@ -20,7 +20,8 @@
                 "${workspaceFolder}/devel/.private/image_sampling/include",
                 "${workspaceFolder}/devel/include/**",
                 "/usr/include/pcl-1.8",
-                "/usr/include/eigen3"
+                "/usr/include/eigen3",
+                "${workspaceFolder}/devel/.private/recon_protocol/include"
             ],
             "name": "ROS",
             "intelliSenseMode": "gcc-x64",
