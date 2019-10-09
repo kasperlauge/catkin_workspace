@@ -24,7 +24,7 @@ bool ProtocolRunner::handleProtocolCall(recon_protocol::ProtocolInfo::Request &r
             coordinate_transformation::CoordinateInfo coordinateMsg;
             coordinateMsg.request.SlzData = reconMsg.response.SlzData;
             if (this->transform_coordinates_client.call(coordinateMsg)) {
-                ROS_INFO("Coordinate transform returned");
+                // ROS_INFO("Coordinate transform returned");
                 // for (int i = 0; i < coordinateMsg.response.CoordinateData.at(1).x.size(); i++) {
                 //     int x = coordinateMsg.response.CoordinateData.at(1).x.at(i);
                 //     int y = coordinateMsg.response.CoordinateData.at(1).y.at(i);
