@@ -9,13 +9,13 @@ Transformer::Transformer(ros::NodeHandle n)
     Transformer::nodeHandle = n;
 };
 
-bool Transformer::transformCoordinates(coordinate_transformation::CoordinateInfo::Request &req, coordinate_transformation::CoordinateInfo::Response &res)
+bool Transformer::transformCoordinates(recon_msgs::CoordinateInfo::Request &req, recon_msgs::CoordinateInfo::Response &res)
 {
     ROS_INFO("transform coordinates called!");
 
     std::vector<sensor_msgs::PointCloud2> pointClouds(req.SlzData.PointClouds);
 
-    std::vector<slz_recognition::ImageCoordinateData> imageInfos(req.SlzData.ImageCoordinateData);
+    std::vector<recon_msgs::ImageCoordinateData> imageInfos(req.SlzData.ImageCoordinateData);
     auto numberOfPointClouds = imageInfos.size();
     res.CoordinateData.reserve(numberOfPointClouds);
 
@@ -32,7 +32,7 @@ bool Transformer::transformCoordinates(coordinate_transformation::CoordinateInfo
         pcl::PointCloud<pcl::PointXYZ>::Ptr temp_cloud(new pcl::PointCloud<pcl::PointXYZ>);
         pcl::fromPCLPointCloud2(pcl_pc2, *temp_cloud);
 
-        coordinate_transformation::CoordinateData coordinateData;
+        recon_msgs::CoordinateData coordinateData;
         coordinateData.x.reserve(imageInfos.at(i).x.size());
         coordinateData.y.reserve(imageInfos.at(i).x.size());
         coordinateData.z.reserve(imageInfos.at(i).x.size());

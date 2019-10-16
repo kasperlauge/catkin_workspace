@@ -8,13 +8,13 @@
 #include <opencv2/highgui/highgui.hpp>
 #include "sensor_msgs/NavSatFix.h"
 #include "sensor_msgs/Image.h"
-#include "slz_recognition/ImageInfo.h"
+#include "recon_msgs/ImageInfo.h"
 
 class Recognizer {
     ros::NodeHandle nodeHandle;
     ros::ServiceServer service;
     public:
         Recognizer(ros::NodeHandle n);
-        bool processImages(slz_recognition::ImageInfo::Request &req, slz_recognition::ImageInfo::Response &res);
+        bool processImages(recon_msgs::ImageInfo::Request &req, recon_msgs::ImageInfo::Response &res);
         void setup();
 };

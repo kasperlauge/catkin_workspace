@@ -8,7 +8,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include "sensor_msgs/NavSatFix.h"
 #include "sensor_msgs/Image.h"
-#include "coordinate_transformation/CoordinateInfo.h"
+#include "recon_msgs/CoordinateInfo.h"
 #include <pcl_ros/point_cloud.h>
 #include <pcl/point_types.h>
 #include <pcl_conversions/pcl_conversions.h>
@@ -18,6 +18,6 @@ class Transformer {
     ros::ServiceServer service;
     public:
         Transformer(ros::NodeHandle n);
-        bool transformCoordinates(coordinate_transformation::CoordinateInfo::Request &req, coordinate_transformation::CoordinateInfo::Response &res);
+        bool transformCoordinates(recon_msgs::CoordinateInfo::Request &req, recon_msgs::CoordinateInfo::Response &res);
         void setup();
 };

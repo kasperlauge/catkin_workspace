@@ -1,11 +1,12 @@
 #include "recognizer.h"
 
+
 Recognizer::Recognizer(ros::NodeHandle n)
 {
     Recognizer::nodeHandle = n;
 };
 
-bool Recognizer::processImages(slz_recognition::ImageInfo::Request &req, slz_recognition::ImageInfo::Response &res)
+bool Recognizer::processImages(recon_msgs::ImageInfo::Request &req, recon_msgs::ImageInfo::Response &res)
 {
     ROS_INFO("recognize_slz called!");
 
@@ -47,7 +48,7 @@ bool Recognizer::processImages(slz_recognition::ImageInfo::Request &req, slz_rec
         cv::findNonZero(typeTransform, candidateRegions);
         auto numberOfNonZeroCoordinates = candidateRegions.total();
 
-        slz_recognition::ImageCoordinateData imgRes;
+        recon_msgs::ImageCoordinateData imgRes;
         imgRes.x.reserve(numberOfNonZeroCoordinates);
         imgRes.y.reserve(numberOfNonZeroCoordinates);
 

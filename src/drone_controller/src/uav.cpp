@@ -29,7 +29,7 @@ void UAV::setup()
     this->service = this->nodeHandle.advertiseService("sampling", &UAV::sampleImages, this);
 }
 
-bool UAV::sampleImages(drone_controller::Sampleimages::Request &req, drone_controller::Sampleimages::Response &res)
+bool UAV::sampleImages(recon_msgs::Sampleimages::Request &req, recon_msgs::Sampleimages::Response &res)
 {
 
     ROS_INFO("RUN Called");
