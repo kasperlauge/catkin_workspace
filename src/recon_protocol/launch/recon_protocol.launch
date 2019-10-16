@@ -2,7 +2,9 @@
     <node name="$(anon tf_node)" pkg="tf_node" type="main.py" />
     <node name="$(anon recon)" pkg="slz_recognition" type="slz_recognition" />
     <node name="$(anon liftoff)" pkg="drone_controller" type="liftoff" />
-    <node name="$(anon trans)" pkg="coordinate_transformation" type="coordinate_transformation" />
-    <node name="$(anon protocol)" pkg="recon_protocol" type="recon_protocol" />
-    <node name="$(anon rviz)" pkg="rviz" type="rviz" args="-d $(find recon_protocol)/rviz/drone.rviz" />
+    <node name="$(anon trans)" pkg="coordinate_transformation" type="coordinate_transformation" output="screen"/>
+    <node name="$(anon protocol)" pkg="recon_protocol" type="recon_protocol" output="screen"/>
+    
+    <!-- Uncomment for Visualization in RVIZ.  -->
+    <!-- <node name="$(anon rviz)" pkg="rviz" type="rviz" args="-d $(find recon_protocol)/rviz/drone.rviz" /> -->
 </launch>
