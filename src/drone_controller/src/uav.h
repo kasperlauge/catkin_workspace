@@ -5,7 +5,7 @@
 #include "mavros_msgs/CommandTOL.h"
 #include <mavros_msgs/SetMode.h>
 #include "uavcontrol.h"
-#include "drone_controller/Sampleimages.h"
+#include "recon_msgs/Sampleimages.h"
 
 
 class UAV
@@ -37,5 +37,5 @@ private:
 public:
     UAV(ros::NodeHandle n);
     ~UAV();
-    bool sampleImages(drone_controller::Sampleimages::Request &req, drone_controller::Sampleimages::Response &res);
+    bool sampleImages(recon_msgs::Sampleimages::Request &req, recon_msgs::Sampleimages::Response &res);
 };

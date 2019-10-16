@@ -10,7 +10,7 @@ project(coordinate_transformation)
 set(OpenCV_DIR /usr/share/OpenCV)
 set(PCL_DIR /usr/lib/x86_64-linux-gnu/cmake/pcl)
 
-set(slz_recognition_DIR ../slz_recognition)
+#set(slz_recognition_DIR ../slz_recognition)
 
 find_package(catkin REQUIRED COMPONENTS
   OpenCV REQUIRED
@@ -18,11 +18,10 @@ find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   image_transport
   mavros_msgs
-  message_generation
   roscpp
   sensor_msgs
   std_msgs
-  slz_recognition
+  recon_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -59,16 +58,16 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(
-  FILES
-  CoordinateData.msg
-)
+#add_message_files(
+#  FILES
+#  CoordinateData.msg
+#)
 
 ## Generate services in the 'srv' folder
-add_service_files(
-  FILES
-  CoordinateInfo.srv
-)
+#add_service_files(
+#  FILES
+#  CoordinateInfo.srv
+#)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -78,12 +77,12 @@ add_service_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
-   DEPENDENCIES
-   std_msgs
-   sensor_msgs
-   slz_recognition
-)
+#generate_messages(
+#   DEPENDENCIES
+#   std_msgs
+#   sensor_msgs
+#   slz_recognition
+#)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -118,7 +117,7 @@ catkin_package(
   INCLUDE_DIRS include
 #  LIBRARIES coordinate_transformation
 #  CATKIN_DEPENDS mavros_msgs roscpp sensor_msgs std_msgs
-  CATKIN_DEPENDS message_runtime slz_recognition
+#  CATKIN_DEPENDS message_runtime slz_recognition
 )
 
 ###########

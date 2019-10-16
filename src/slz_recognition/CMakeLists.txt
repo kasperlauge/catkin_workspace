@@ -16,10 +16,10 @@ find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   image_transport
   mavros_msgs
-  message_generation
   roscpp
   sensor_msgs
   std_msgs
+  recon_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -56,17 +56,17 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(
-  FILES
-  ImageCoordinateData.msg
-  SlzData.msg
-)
+#add_message_files(
+#  FILES
+#  ImageCoordinateData.msg
+#  SlzData.msg
+#)
 
 ## Generate services in the 'srv' folder
-add_service_files(
-  FILES
-  ImageInfo.srv
-)
+#add_service_files(
+#  FILES
+#  ImageInfo.srv
+#)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -76,11 +76,11 @@ add_service_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
-   DEPENDENCIES
-   std_msgs
-   sensor_msgs
-)
+#generate_messages(
+#   DEPENDENCIES
+#   std_msgs
+#   sensor_msgs
+#)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##

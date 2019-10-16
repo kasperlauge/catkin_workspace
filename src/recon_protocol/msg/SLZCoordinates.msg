@@ -1,2 +1,0 @@
-Header Header
-coordinate_transformation/CoordinateData[] CoordinateData

@@ -8,8 +8,8 @@
 #include <opencv2/highgui/highgui.hpp>
 #include "sensor_msgs/NavSatFix.h"
 #include "sensor_msgs/Image.h"
-#include "recon_protocol/ProtocolInfo.h"
-#include "recon_protocol/SLZCoordinates.h"
+#include "recon_msgs/ProtocolInfo.h"
+#include "recon_msgs/SLZCoordinates.h"
 
 class ProtocolRunner {
     ros::NodeHandle nodeHandle;
@@ -20,6 +20,6 @@ class ProtocolRunner {
     ros::Publisher coordinate_publisher;
     public:
         ProtocolRunner(ros::NodeHandle n);
-        bool handleProtocolCall(recon_protocol::ProtocolInfo::Request &req, recon_protocol::ProtocolInfo::Response &res);
+        bool handleProtocolCall(recon_msgs::ProtocolInfo::Request &req, recon_msgs::ProtocolInfo::Response &res);
         void setup();
 };

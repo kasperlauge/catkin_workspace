@@ -1,29 +1,29 @@
 #include "protocol_runner.h"
-#include "drone_controller/Sampleimages.h"
-#include "slz_recognition/ImageInfo.h"
-#include "coordinate_transformation/CoordinateInfo.h"
+#include "recon_msgs/Sampleimages.h"
+#include "recon_msgs/ImageInfo.h"
+#include "recon_msgs/CoordinateInfo.h"
 
 ProtocolRunner::ProtocolRunner(ros::NodeHandle n)
 {
     ProtocolRunner::nodeHandle = n;
 };
 
-bool ProtocolRunner::handleProtocolCall(recon_protocol::ProtocolInfo::Request &req, recon_protocol::ProtocolInfo::Response &res)
+bool ProtocolRunner::handleProtocolCall(recon_msgs::ProtocolInfo::Request &req, recon_msgs::ProtocolInfo::Response &res)
 {
     ROS_INFO("recon protocol called!");
 
-    drone_controller::Sampleimages sampleMsg;
+    recon_msgs::Sampleimages sampleMsg;
 
     if (this->sampling_client.call(sampleMsg))
     {
         ROS_INFO("Sampling returned");
-        slz_recognition::ImageInfo reconMsg;
+        recon_msgs::ImageInfo reconMsg;
         reconMsg.request.Images = sampleMsg.response.Images;
         reconMsg.request.pointClouds = sampleMsg.response.pointClouds;
         if (this->slz_recognition_client.call(reconMsg))
         {
             ROS_INFO("Images returned");
-            coordinate_transformation::CoordinateInfo coordinateMsg;
+            recon_msgs::CoordinateInfo coordinateMsg;
             coordinateMsg.request.SlzData = reconMsg.response.SlzData;
             if (this->transform_coordinates_client.call(coordinateMsg))
             {
@@ -44,8 +44,8 @@ bool ProtocolRunner::handleProtocolCall(recon_protocol::ProtocolInfo::Request &r
                 //     std::cout << "[x,y,z]: [" << x << "," << y << "," << z << "]" << std::endl;
                 // }
 
-                std::vector<coordinate_transformation::CoordinateData> coordinateData(coordinateMsg.response.CoordinateData);
-                recon_protocol::SLZCoordinates slz_coordinates;
+                std::vector<recon_msgs::CoordinateData> coordinateData(coordinateMsg.response.CoordinateData);
+                recon_msgs::SLZCoordinates slz_coordinates;
                 slz_coordinates.CoordinateData = coordinateData;
                 ProtocolRunner::coordinate_publisher.publish(slz_coordinates);
             }
@@ -59,12 +59,12 @@ bool ProtocolRunner::handleProtocolCall(recon_protocol::ProtocolInfo::Request &r
 
 void ProtocolRunner::setup()
 {
-    this->sampling_client = this->nodeHandle.serviceClient<drone_controller::Sampleimages>("sampling");
-    this->slz_recognition_client = this->nodeHandle.serviceClient<slz_recognition::ImageInfo>("find_slz");
-    this->transform_coordinates_client = this->nodeHandle.serviceClient<coordinate_transformation::CoordinateInfo>("transform_coordinates");
+    this->sampling_client = this->nodeHandle.serviceClient<recon_msgs::Sampleimages>("sampling");
+    this->slz_recognition_client = this->nodeHandle.serviceClient<recon_msgs::ImageInfo>("find_slz");
+    this->transform_coordinates_client = this->nodeHandle.serviceClient<recon_msgs::CoordinateInfo>("transform_coordinates");
 
     // Advertise topic with coordinates
-    ProtocolRunner::coordinate_publisher = ProtocolRunner::nodeHandle.advertise<recon_protocol::SLZCoordinates>("slz_coordinates", 1000);
+    ProtocolRunner::coordinate_publisher = ProtocolRunner::nodeHandle.advertise<recon_msgs::SLZCoordinates>("slz_coordinates", 1000);
 
     ProtocolRunner::service = ProtocolRunner::nodeHandle.advertiseService("recon_protocol", &ProtocolRunner::handleProtocolCall, this);
 }
