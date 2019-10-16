@@ -14,16 +14,28 @@ bool ProtocolRunner::handleProtocolCall(recon_protocol::ProtocolInfo::Request &r
 
     drone_controller::Sampleimages sampleMsg;
 
-    if (this->sampling_client.call(sampleMsg)) {
+    if (this->sampling_client.call(sampleMsg))
+    {
         ROS_INFO("Sampling returned");
         slz_recognition::ImageInfo reconMsg;
         reconMsg.request.Images = sampleMsg.response.Images;
         reconMsg.request.pointClouds = sampleMsg.response.pointClouds;
-        if (this->slz_recognition_client.call(reconMsg)) {
+        if (this->slz_recognition_client.call(reconMsg))
+        {
             ROS_INFO("Images returned");
             coordinate_transformation::CoordinateInfo coordinateMsg;
             coordinateMsg.request.SlzData = reconMsg.response.SlzData;
-            if (this->transform_coordinates_client.call(coordinateMsg)) {
+            if (this->transform_coordinates_client.call(coordinateMsg))
+            {
+
+                // for (auto &j : coordinateMsg.response.CoordinateData)
+                // {
+                //     for (auto &k : j.x)
+                //     {
+                //         ROS_INFO("X coordinate could be: %f", k);
+                //     }
+                // }
+
                 // ROS_INFO("Coordinate transform returned");
                 // for (int i = 0; i < coordinateMsg.response.CoordinateData.at(1).x.size(); i++) {
                 //     int x = coordinateMsg.response.CoordinateData.at(1).x.at(i);
@@ -39,8 +51,6 @@ bool ProtocolRunner::handleProtocolCall(recon_protocol::ProtocolInfo::Request &r
             }
         }
     }
-
-
 
     res.Success = true;
 
