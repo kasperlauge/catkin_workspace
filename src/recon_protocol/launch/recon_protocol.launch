@@ -7,4 +7,6 @@
     
     <!-- Uncomment for Visualization in RVIZ.  -->
     <node name="$(anon rviz)" pkg="rviz" type="rviz" args="-d $(find recon_protocol)/rviz/drone.rviz" />
+    <node name="$(anon slz_markers)" pkg="slz_markers" type="marker.py"/>
+
 </launch>

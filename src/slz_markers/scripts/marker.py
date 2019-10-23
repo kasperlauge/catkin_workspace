@@ -8,12 +8,12 @@ def mycallback(msg):
     rospy.loginfo("Gothere")
     
     markerArray = MarkerArray()
-
+    rospy.loginfo(len(msg.CoordinateData[0].x))
 
     for i in range(len(msg.CoordinateData[0].x)):
         pos = msg.CoordinateData[0]
         marker = Marker()
-        marker.header.frame_id = "/base_link"
+        marker.header.frame_id = "iris_sensors_0/camera_red_iris_link"
         marker.type = marker.SPHERE
         marker.action = marker.ADD
         marker.scale.x = 0.2
