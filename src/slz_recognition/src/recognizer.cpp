@@ -11,6 +11,7 @@ bool Recognizer::processImages(slz_recognition::ImageInfo::Request &req, slz_rec
 
     std::vector<sensor_msgs::Image> images(req.Images);
     auto numberOfImages = images.size();
+    std::vector<cv::Mat> colorImgs;
 
     for (int i = 0; i < numberOfImages; i++) {
         cv_bridge::CvImagePtr cv_ptr;
@@ -22,6 +23,10 @@ bool Recognizer::processImages(slz_recognition::ImageInfo::Request &req, slz_rec
         cv::Mat typeTransform;
 
         cv_ptr = cv_bridge::toCvCopy(images[i], sensor_msgs::image_encodings::BGR8);
+        cv::Mat colorImg;
+        // cv::cvtColor(cv_ptr->image, colorImg, cv::COLOR_BGR2RGB);
+        colorImg = cv_ptr->image;
+        colorImgs.push_back(colorImg);
 
 
         // Process image - this part should find all regions which makes good SLZs
@@ -69,6 +74,13 @@ bool Recognizer::processImages(slz_recognition::ImageInfo::Request &req, slz_rec
         // cv::waitKey(0);
     }
 
+    for (int i = 0; i < colorImgs.size(); i++) {
+        std::ostringstream oss;
+        oss << "/home/kasperlauge/rosimgs/img_" << i << ".png";
+        std::string windowName = oss.str();
+
+        cv::imwrite(windowName, colorImgs.at(i));
+    }
     return true;
 };
 
