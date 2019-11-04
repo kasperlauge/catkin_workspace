@@ -1,6 +1,7 @@
 #include "transformer.h"
 #include <pcl_conversions/pcl_conversions.h>
 #include <pcl/point_cloud.h>
+#include <pcl/io/pcd_io.h>
 #include <pcl/point_types.h>
 #include <pcl/filters/filter.h>
 
@@ -22,7 +23,7 @@ bool Transformer::transformCoordinates(recon_msgs::CoordinateInfo::Request &req,
     ROS_INFO("allocated vectors");
 
     ROS_INFO_STREAM("nr. of images: " << imageInfos.size());
-
+    bool tmp = true;
     // Loop through all of the sampled image data - for each imagedata
     for (std::vector<int>::size_type i = 0; i != imageInfos.size(); i++)
     {
@@ -31,6 +32,12 @@ bool Transformer::transformCoordinates(recon_msgs::CoordinateInfo::Request &req,
         pcl_conversions::toPCL(pointClouds[i], pcl_pc2);
         pcl::PointCloud<pcl::PointXYZ>::Ptr temp_cloud(new pcl::PointCloud<pcl::PointXYZ>);
         pcl::fromPCLPointCloud2(pcl_pc2, *temp_cloud);
+
+        if(tmp){
+            ROS_INFO("Saving cloud");
+            pcl::io::savePCDFileASCII("test_pcd.pcd", *temp_cloud);
+            tmp = false;
+        }
 
         recon_msgs::CoordinateData coordinateData;
         coordinateData.x.reserve(imageInfos.at(i).x.size());

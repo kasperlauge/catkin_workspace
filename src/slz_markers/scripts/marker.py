@@ -2,7 +2,8 @@
 import rospy
 from visualization_msgs.msg import Marker, MarkerArray
 from recon_msgs.msg import SLZCoordinates
-
+from sklearn.cluster import KMeans
+import numpy as np
 
 def mycallback(msg):
     rospy.loginfo("Gothere")
@@ -10,8 +11,20 @@ def mycallback(msg):
     markerArray = MarkerArray()
     rospy.loginfo(len(msg.CoordinateData[0].x))
 
+    data = np.zeros((3,len(msg.CoordinateData[0].x)))
+    
+    pos = msg.CoordinateData[0]
     for i in range(len(msg.CoordinateData[0].x)):
-        pos = msg.CoordinateData[0]
+        data[0][i] = pos.x[i]
+        data[1][i] = pos.y[i]
+        data[2][i] = pos.z[i]       
+
+    kmeans = KMeans(n_clusters=2, random_state=0).fit(data)
+    
+    cluster1 = np.where(kmeans.labels_ == 0)
+    cluster2 = np.where(kmeans.labels_ == 1)
+
+    for i in data[cluster1]:
         marker = Marker()
         marker.header.frame_id = "iris_sensors_0/camera_red_iris_link"
         marker.type = marker.SPHERE
@@ -23,9 +36,26 @@ def mycallback(msg):
         marker.color.r = 1.0
         marker.color.g = 1.0
         marker.color.b = 0.0
-        marker.pose.position.x = pos.x[i]
-        marker.pose.position.y = pos.y[i]
-        marker.pose.position.z = pos.z[i]
+        marker.pose.position.x = i[0]
+        marker.pose.position.y = i[1]
+        marker.pose.position.z = i[2]
+        markerArray.markers.append(marker)
+    
+    for i in data[cluster2]:
+        marker = Marker()
+        marker.header.frame_id = "iris_sensors_0/camera_red_iris_link"
+        marker.type = marker.SPHERE
+        marker.action = marker.ADD
+        marker.scale.x = 0.4
+        marker.scale.y = 0.4
+        marker.scale.z = 0.4
+        marker.color.a = 1.0
+        marker.color.r = 1.0
+        marker.color.g = 0.0
+        marker.color.b = 0.0
+        marker.pose.position.x = i[0]
+        marker.pose.position.y = i[1]
+        marker.pose.position.z = i[2]
         markerArray.markers.append(marker)
     
     id = 0

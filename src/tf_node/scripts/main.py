@@ -28,7 +28,7 @@ if __name__ == '__main__':
         """
         static_transformStamped.transform.translation.x = float(0)
         static_transformStamped.transform.translation.y = float(0)
-        static_transformStamped.transform.translation.z = float(0)
+        static_transformStamped.transform.translation.z = float(0.07)
 
         quat = tf.transformations.quaternion_from_euler(
             float(-math.pi*0.5), float(0), float(-math.pi*0.5))
