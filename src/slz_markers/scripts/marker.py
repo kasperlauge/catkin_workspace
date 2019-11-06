@@ -6,39 +6,54 @@ from sklearn.cluster import KMeans
 import numpy as np
 
 def mycallback(msg):
-    rospy.loginfo("Gothere")
+
     
     markerArray = MarkerArray()
+
     rospy.loginfo(len(msg.CoordinateData[0].x))
 
-    data = np.zeros((3,len(msg.CoordinateData[0].x)))
+    data = np.zeros((3,len(msg.CoordinateData[0].x))) #preallocate
     
     pos = msg.CoordinateData[0]
+    
+    """
+    Copy data into numpy array
+    """
+    
     for i in range(len(msg.CoordinateData[0].x)):
         data[0][i] = pos.x[i]
         data[1][i] = pos.y[i]
         data[2][i] = pos.z[i]       
-
-    rospy.loginfo(data.shape)
     
+
+    """
+    The number of k-means clusters to use
+    """
     nr_clusters = 7
 
+    """
+    K-means clustering
+    """
     kmeans = KMeans(n_clusters=nr_clusters, random_state=0).fit(np.transpose(data))
     
     clusters = []
     for i in range(nr_clusters):
         clusters.append(np.where(kmeans.labels_ == i)[0])
 
+    """
+    Could be changed to define colors
+    """
+    # colors = np.array([[0.1, 0.1,0.1],[0.2, 0.2,0.2],[0.3, 0.3,0.3],[0.4, 0.4,0.4],[0.5, 0.5,0.5],[0.1, 0.6,0.6]])
+
     color = [0.1, 0.2,0.3,0.4,0.5,0.6,0.7,0.8]
     l = 0
 
     threshold = .1
 
-    remove = []
+    remove = [] # Array used for removing clusters with big Z difference
 
     for c in clusters:
         a = np.max(data[2][c[:]])-np.min(data[2][c[:]])
-        rospy.loginfo(a)
         if a > threshold:
             remove.append(c)
 
