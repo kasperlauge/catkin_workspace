@@ -1,5 +1,5 @@
 #include "uav.h"
-
+#include "nav_msgs/Odometry.h"
 /**
  * Function to publish position preflight, needed to make offboard turn on
  * 
@@ -100,8 +100,11 @@ bool UAV::sampleImages(recon_msgs::Sampleimages::Request &req, recon_msgs::Sampl
                     ROS_INFO("Image Taken");
 
                     //Sample an image and a pointcloud
+                    auto position = ros::topic::waitForMessage<nav_msgs::Odometry>("/uav0/mavros/local_position/odom");
                     auto image = ros::topic::waitForMessage<sensor_msgs::Image>("/iris_sensors_0/camera_red_iris/image_raw", this->nodeHandle);
                     auto cloud = ros::topic::waitForMessage<sensor_msgs::PointCloud2>("/iris_sensors_0/camera_red_iris/depth/points", this->nodeHandle);
+                    
+                    res.positions.push_back(*position);
                     res.Images.push_back(*image);
                     res.pointClouds.push_back(*cloud);
 

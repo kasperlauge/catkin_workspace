@@ -25,6 +25,7 @@ bool ProtocolRunner::handleProtocolCall(recon_msgs::ProtocolInfo::Request &req, 
             ROS_INFO("Images returned");
             recon_msgs::CoordinateInfo coordinateMsg;
             coordinateMsg.request.SlzData = reconMsg.response.SlzData;
+            coordinateMsg.request.positions = sampleMsg.response.positions;
             if (this->transform_coordinates_client.call(coordinateMsg))
             {
 

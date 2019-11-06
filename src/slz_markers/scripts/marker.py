@@ -48,7 +48,7 @@ def mycallback(msg):
     color = [0.1, 0.2,0.3,0.4,0.5,0.6,0.7,0.8]
     l = 0
 
-    threshold = .1
+    threshold = 10
 
     remove = [] # Array used for removing clusters with big Z difference
 
@@ -58,12 +58,13 @@ def mycallback(msg):
             remove.append(c)
 
     for c in remove:
+        rospy.loginfo("Cluster removed")
         clusters.remove(c)
 
     for c in clusters:
         for i in range(c.size):
             marker = Marker()
-            marker.header.frame_id = "iris_sensors_0/camera_red_iris_link"
+            marker.header.frame_id = "map"
             marker.type = marker.SPHERE
             marker.action = marker.ADD
             marker.scale.x = 0.2
