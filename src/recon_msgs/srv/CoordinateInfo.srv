@@ -1,3 +1,4 @@
 recon_msgs/SlzData SlzData
+nav_msgs/Odometry[] positions
 ---
 CoordinateData[] CoordinateData

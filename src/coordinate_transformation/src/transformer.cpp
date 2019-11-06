@@ -4,6 +4,7 @@
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_types.h>
 #include <pcl/filters/filter.h>
+#include <tf/tf.h>
 
 Transformer::Transformer(ros::NodeHandle n)
 {
@@ -27,6 +28,8 @@ bool Transformer::transformCoordinates(recon_msgs::CoordinateInfo::Request &req,
     // Loop through all of the sampled image data - for each imagedata
     for (std::vector<int>::size_type i = 0; i != imageInfos.size(); i++)
     {
+        auto position = req.positions[i].pose.pose;
+
         // Convert cloud to PCL::XYZ
         pcl::PCLPointCloud2 pcl_pc2;
         pcl_conversions::toPCL(pointClouds[i], pcl_pc2);
@@ -52,9 +55,23 @@ bool Transformer::transformCoordinates(recon_msgs::CoordinateInfo::Request &req,
 
             if (!isnan(temp_cloud->points[index].x))
             {
-                coordinateData.x.push_back(temp_cloud->points[index].x);
-                coordinateData.y.push_back(temp_cloud->points[index].y);
-                coordinateData.z.push_back(temp_cloud->points[index].z);
+                tf::Vector3 vector(temp_cloud->points[index].x,temp_cloud->points[index].y,temp_cloud->points[index].z);
+                
+
+                tf::Quaternion initial_rotation;
+
+                initial_rotation.setRPY(-0.5*M_PI,0,-0.5*M_PI);
+
+                tf::Quaternion rotation(position.orientation.x,position.orientation.y,position.orientation.z,position.orientation.w);
+
+                tf::Vector3 translation(position.position.x,position.position.y,position.position.z);
+
+
+                tf::Vector3 rotated_translated_vector = tf::quatRotate(rotation,tf::quatRotate(initial_rotation,vector))+translation;
+
+                coordinateData.x.push_back(rotated_translated_vector.getX());
+                coordinateData.y.push_back(rotated_translated_vector.getY());
+                coordinateData.z.push_back(rotated_translated_vector.getZ());
             }
         }
 
