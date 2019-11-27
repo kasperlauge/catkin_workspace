@@ -1,0 +1,18 @@
+digraph G {
+"base_link" -> "iris_sensors_0/camera_red_iris_link"[label="Broadcaster: /tf_node_lars_Aspire_E5_575_7107_4751763165801399669\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 79.676 sec old)\nBuffer length: 0.000 sec\n"];
+"map" -> "base_link"[label="Broadcaster: /uav0/mavros\nAverage rate: 30.314 Hz\nMost recent transform: 79.640 ( 0.036 sec old)\nBuffer length: 2.672 sec\n"];
+"local_origin" -> "local_origin_ned"[label="Broadcaster: /uav0/mavros\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 79.676 sec old)\nBuffer length: 0.000 sec\n"];
+"local_origin_ned" -> "fcu_frd"[label="Broadcaster: /uav0/mavros\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 79.676 sec old)\nBuffer length: 0.000 sec\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 79.676"[ shape=plaintext ] ;
+ }->"local_origin";
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 79.676"[ shape=plaintext ] ;
+ }->"fcu";
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 79.676"[ shape=plaintext ] ;
+ }->"map";
+}
