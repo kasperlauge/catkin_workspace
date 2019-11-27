@@ -22,6 +22,14 @@ bool Recognizer::processImages(recon_msgs::ImageInfo::Request &req, recon_msgs::
         cv_bridge::CvImagePtr cv_ptr;
         cv_ptr = cv_bridge::toCvCopy(images[i], sensor_msgs::image_encodings::BGR8);
         cv::Mat currentImg = cv_ptr->image;
+
+        // Store image file for evaluation
+        std::ostringstream oss;
+        oss << "/home/kasperlauge/Desktop/samples/img_" << i << ".png";
+        cv::imwrite(oss.str(), currentImg);
+        // end store image file
+
+
         cv::Mat candidateIndices = cv::Mat::zeros(currentImg.size(), CV_8UC1);
         cv::Mat grayImg;
         cv::Mat detected_edges;
