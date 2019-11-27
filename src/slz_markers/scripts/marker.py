@@ -4,6 +4,8 @@ from visualization_msgs.msg import Marker, MarkerArray
 from recon_msgs.msg import SLZCoordinates
 from sklearn.cluster import KMeans
 import numpy as np
+from geometry_msgs.msg import Point
+
 
 def mycallback(msg):
 
@@ -12,20 +14,32 @@ def mycallback(msg):
 
     rospy.loginfo(len(msg.CoordinateData[0].x))
 
-    data = np.zeros((3,len(msg.CoordinateData[0].x))) #preallocate
+    x_length = 0
+    for c in msg.CoordinateData:
+        x_length += len(c.x)
+
+
+    data = np.zeros((3,x_length)) #preallocate
     
-    pos = msg.CoordinateData[0]
+    # pos = msg.CoordinateData[0]
     
     """
     Copy data into numpy array
     """
     
-    for i in range(len(msg.CoordinateData[0].x)):
-        data[0][i] = pos.x[i]
-        data[1][i] = pos.y[i]
-        data[2][i] = pos.z[i]       
-    
+    k = 0
+    for c in msg.CoordinateData:
+        for j in range(len(c.x)):
+            data[0][k] = c.x[j]
+            data[1][k] = c.y[j]
+            data[2][k] = c.z[j]
+            k += 1
 
+    # for i in range(len(msg.CoordinateData[0].x)):
+    #     data[0][i] = pos.x[i]
+    #     data[1][i] = pos.y[i]
+    #     data[2][i] = pos.z[i]       
+    
     """
     The number of k-means clusters to use
     """
@@ -62,22 +76,26 @@ def mycallback(msg):
         clusters.remove(c)
 
     for c in clusters:
+        marker = Marker()
+        marker.header.frame_id = "map"
+        marker.type = marker.POINTS
+        marker.action = marker.ADD
+        marker.scale.x = 0.2
+        marker.scale.y = 0.2
+        marker.color.a = 1.0
+        marker.color.r = color[l]
+        marker.color.g = color[l]
+        marker.color.b = color[l]
+        
         for i in range(c.size):
-            marker = Marker()
-            marker.header.frame_id = "map"
-            marker.type = marker.SPHERE
-            marker.action = marker.ADD
-            marker.scale.x = 0.2
-            marker.scale.y = 0.2
-            marker.scale.z = 0.2
-            marker.color.a = 1.0
-            marker.color.r = color[l]
-            marker.color.g = color[l]
-            marker.color.b = color[l]
-            marker.pose.position.x = data[0][c[i]]
-            marker.pose.position.y = data[1][c[i]]
-            marker.pose.position.z = data[2][c[i]]
-            markerArray.markers.append(marker)
+            # marker.scale.z = 0.2
+            pt = Point()
+            pt.x = data[0][c[i]]
+            pt.y = data[1][c[i]]
+            pt.z = data[2][c[i]]
+            marker.points.append(pt)
+        
+        markerArray.markers.append(marker)
         l += 1
     
     id = 0

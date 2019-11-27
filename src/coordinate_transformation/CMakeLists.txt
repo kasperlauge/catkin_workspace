@@ -170,6 +170,10 @@ add_library(transformer
 add_executable(coordinate_transformation src/coordinate_transformation.cpp)
 target_link_libraries(coordinate_transformation transformer ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${PCL_LIBRARIES})
 
+
+add_executable(test src/pcl_attempt.cpp)
+target_link_libraries(test ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${PCL_LIBRARIES})
+
 #############
 ## Install ##
 #############
